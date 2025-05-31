@@ -69,4 +69,4 @@ This project is licensed under the MIT License.
 
 
 ## 🤝 Credits
-This project may use external sources or curated lists to help identify women directors, such as Wikipedia or open datasets. Any such sources will be credited in the code and documentation.
+Letterboxd movies by women uses the TMDB API but is not endorsed or certified by TMDB.
