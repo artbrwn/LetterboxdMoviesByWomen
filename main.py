@@ -51,8 +51,8 @@ def get_gender_from_movie(movie_id):
     It gets an id of a movie and returns True if at least one of the directors is a woman
     """
     if movie_id == None:
-        global uncaptured_movies 
-        uncaptured_movies += 1
+        global unidentified_movies
+        unidentified_movies += 1
         return None
     
     movie_response = requests.get(f"{TMDB_BASE_URL}/movie/{movie_id}/credits?api_key={TMDB_API_KEY}")
@@ -88,15 +88,16 @@ def is_directed_by_woman(directors_genders):
 n_of_movies_total = len(watched_movies)
 watched_movies_by_women = []
 uncaptured_movies = 0
+unidentified_movies = 0
 
 for movie in watched_movies:
     print(f"Analyzing {watched_movies.index(movie)} of {n_of_movies_total}: {movie[0]}")
     movie_id = get_movie_id_from_lett(movie)
     if movie_id:
         movie_gender = get_gender_from_movie(movie_id)
-        
-        if is_directed_by_woman(movie_gender):
-            watched_movies_by_women.append(movie)
+        if movie_gender:
+            if is_directed_by_woman(movie_gender):
+                watched_movies_by_women.append(movie)
     
     time.sleep(0.05)
 
