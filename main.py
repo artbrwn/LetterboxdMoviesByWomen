@@ -108,3 +108,6 @@ percentage_by_women = (n_of_movies_by_women *100) / n_of_movies_total
 # PRINT RESULTS
 print(f"You've watched {n_of_movies_by_women} movies directed by women out of {n_of_movies_total} movies in total. That is a {percentage_by_women:.2f}%.")
 print(f"{uncaptured_movies} uncaptured films.")
+print(f"Your watched movies by women are:")
+for movie in watched_movies_by_women:
+    print(f"{movie}")
