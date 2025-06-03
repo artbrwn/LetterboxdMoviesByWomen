@@ -2,7 +2,6 @@ import csv
 import requests
 from dotenv import load_dotenv
 import os
-import json
 import time
 
 # API
@@ -29,7 +28,7 @@ def get_movie_id_from_lett(lett_movie):
     if movie_response.status_code == 429:
         print("Rate limit exceeded, sleeping 10 seconds")
         time.sleep(10)
-    movie_json = json.loads(movie_response.text)
+    movie_json = movie_response.json()
     if "results" in movie_json and len(movie_json) > 0: # Manages in case no results are found
         movie_id = movie_json["results"][0]["id"]
         return movie_id
@@ -43,7 +42,7 @@ def get_gender_from_movie(movie_id):
     """
     movie_response = requests.get(f"{TMDB_BASE_URL}/movie/{movie_id}/credits?api_key={TMDB_API_KEY}")
 
-    movie_json = json.loads(movie_response.text)
+    movie_json = movie_response.json()
     if movie_response.status_code == 429:
         print("Rate limit exceeded, sleeping 10 seconds")
         time.sleep(10)
