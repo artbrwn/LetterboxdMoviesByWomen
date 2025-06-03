@@ -4,6 +4,16 @@ from dotenv import load_dotenv
 import os
 import time
 
+
+"""
+TODO:
+Capture movies by women and display them
+Change uncaptured for not_found
+Review logic for uncaptureds
+Capture uncaptured films and display them
+
+"""
+
 # API
 load_dotenv()
 TMDB_API_KEY = os.getenv("TMDB_API_KEY")
@@ -29,7 +39,6 @@ def get_movie_id_from_lett(lett_movie):
         print("Rate limit exceeded, sleeping 10 seconds")
         time.sleep(10)
     movie_json = movie_response.json()
-    print(movie_json)
     if "results" in movie_json and movie_json["total_results"] > 0: # Manages in case no results are found
         movie_id = movie_json["results"][0]["id"]
         return movie_id
