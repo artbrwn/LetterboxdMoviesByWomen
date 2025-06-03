@@ -92,9 +92,11 @@ uncaptured_movies = 0
 for movie in watched_movies:
     print(f"Analyzing {watched_movies.index(movie)} of {n_of_movies_total}: {movie[0]}")
     movie_id = get_movie_id_from_lett(movie)
-    movie_gender = get_gender_from_movie(movie_id)
-    if is_directed_by_woman(movie_gender):
-        watched_movies_by_women.append(movie)
+    if movie_id:
+        movie_gender = get_gender_from_movie(movie_id)
+        
+        if is_directed_by_woman(movie_gender):
+            watched_movies_by_women.append(movie)
     
     time.sleep(0.05)
 
