@@ -55,9 +55,6 @@ Key steps:
 
 
 ## 🚧 Future Improvements
-Improve director gender detection using more reliable sources.
-
-Add more advanced visualizations and filtering options.
 
 Support for multiple users and comparison mode.
 
