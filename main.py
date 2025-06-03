@@ -29,7 +29,8 @@ def get_movie_id_from_lett(lett_movie):
         print("Rate limit exceeded, sleeping 10 seconds")
         time.sleep(10)
     movie_json = movie_response.json()
-    if "results" in movie_json and len(movie_json) > 0: # Manages in case no results are found
+    print(movie_json)
+    if "results" in movie_json and movie_json["total_results"] > 0: # Manages in case no results are found
         movie_id = movie_json["results"][0]["id"]
         return movie_id
     else:
@@ -40,6 +41,11 @@ def get_gender_from_movie(movie_id):
     """
     It gets an id of a movie and returns True if at least one of the directors is a woman
     """
+    if movie_id == None:
+        global uncaptured_movies 
+        uncaptured_movies += 1
+        return None
+    
     movie_response = requests.get(f"{TMDB_BASE_URL}/movie/{movie_id}/credits?api_key={TMDB_API_KEY}")
 
     movie_json = movie_response.json()
@@ -50,20 +56,19 @@ def get_gender_from_movie(movie_id):
     directors_genders = [director["gender"] for director in directors]
     return directors_genders
 
-def is_directed_by_woman(lett_movie): # PRUEBA, CAMBIAR NOMBRE A  is_directed_by_woman
-    # get the ID of the movie from lett_movie
-    movie_id = get_movie_id_from_lett(lett_movie)
-    if movie_id is None: # In case get_movie_id_from_lett returns None for a fail
-        return False
-    # search the movie in tmdb
-    directors_genders = get_gender_from_movie(movie_id)
+def is_directed_by_woman(directors_genders):
+    if directors_genders == None:
+        return None
     # if it has one director
     if len(directors_genders) == 1:
         # if its a woman
         if directors_genders[0] == 1:
             return True
             # Returns True
+        elif directors_genders[0] == 2:
+            return False
         else:
+            # TODO: capture nonbinary or others.
             return False
     else:
         # iterates
@@ -73,12 +78,15 @@ def is_directed_by_woman(lett_movie): # PRUEBA, CAMBIAR NOMBRE A  is_directed_by
 # Iterates watched_movies, applies is_directed_by_woman() and appends to watched_movies_by_women if True.
 n_of_movies_total = len(watched_movies)
 watched_movies_by_women = []
+uncaptured_movies = 0
 
 for movie in watched_movies:
-    if is_directed_by_woman(movie):
+    print(f"Analyzing {watched_movies.index(movie)} of {n_of_movies_total}: {movie[0]}")
+    movie_id = get_movie_id_from_lett(movie)
+    movie_gender = get_gender_from_movie(movie_id)
+    if is_directed_by_woman(movie_gender):
         watched_movies_by_women.append(movie)
     
-    print(f"Analyzing {watched_movies.index(movie)} of {n_of_movies_total}")
     time.sleep(0.05)
 
 n_of_movies_by_women = len(watched_movies_by_women)
@@ -87,4 +95,4 @@ percentage_by_women = (n_of_movies_by_women *100) / n_of_movies_total
 
 # PRINT RESULTS
 print(f"You've watched {n_of_movies_by_women} movies directed by women out of {n_of_movies_total} movies in total. That is a {percentage_by_women:.2f}%.")
-
+print(f"{uncaptured_movies} uncaptured films.")
