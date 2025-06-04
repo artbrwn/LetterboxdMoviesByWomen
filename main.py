@@ -7,11 +7,10 @@ import time
 
 """
 TODO:
-Capture movies by women and display them
-Change uncaptured for not_found
-Review logic for uncaptureds
-Capture uncaptured films and display them
-
+Capture unfound films and display them
+capture unidentified directors and display them
+Give the possibility to chose between watched and watchlist, and in watchlist give the option
+    to export as a csv.
 """
 
 # API
@@ -44,17 +43,14 @@ def get_movie_id_from_lett(lett_movie):
         return movie_id
     else:
         print(f"No results for movie: {lett_movie}")
-        return None
+        global not_found_movies
+        not_found_movies += 1       
+        return False
 
 def get_gender_from_movie(movie_id):
     """
     It gets an id of a movie and returns True if at least one of the directors is a woman
     """
-    if movie_id == None:
-        global unidentified_movies
-        unidentified_movies += 1
-        return None
-    
     movie_response = requests.get(f"{TMDB_BASE_URL}/movie/{movie_id}/credits?api_key={TMDB_API_KEY}")
 
     movie_json = movie_response.json()
@@ -78,6 +74,8 @@ def is_directed_by_woman(directors_genders):
             return False
         else:
             # TODO: capture nonbinary or others.
+            global unidentified_movies
+            unidentified_movies += 1
             return False
     else:
         # iterates
@@ -87,7 +85,7 @@ def is_directed_by_woman(directors_genders):
 # Iterates watched_movies, applies is_directed_by_woman() and appends to watched_movies_by_women if True.
 n_of_movies_total = len(watched_movies)
 watched_movies_by_women = []
-uncaptured_movies = 0
+not_found_movies = 0
 unidentified_movies = 0
 
 for movie in watched_movies:
@@ -98,6 +96,7 @@ for movie in watched_movies:
         if movie_gender:
             if is_directed_by_woman(movie_gender):
                 watched_movies_by_women.append(movie)
+                print(f"{movie[0]} is directed by a woman.")
     
     time.sleep(0.05)
 
@@ -107,7 +106,8 @@ percentage_by_women = (n_of_movies_by_women *100) / n_of_movies_total
 
 # PRINT RESULTS
 print(f"You've watched {n_of_movies_by_women} movies directed by women out of {n_of_movies_total} movies in total. That is a {percentage_by_women:.2f}%.")
-print(f"{uncaptured_movies} uncaptured films.")
+print(f"{not_found_movies} films not found.")
+print(f"{unidentified_movies} films not identified.")
 print(f"Your watched movies by women are:")
 for movie in watched_movies_by_women:
     print(f"{movie}")
