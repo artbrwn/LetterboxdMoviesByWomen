@@ -1,4 +1,3 @@
-import pytest
 from movie import Movie
 
 def test_movie_creation():
