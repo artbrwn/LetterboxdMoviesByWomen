@@ -6,10 +6,10 @@ class Movie():
     TMDB_API_KEY = os.getenv("TMDB_API_KEY")
     TMDB_BASE_URL = "https://api.themoviedb.org/3"
 
-    def __init__(self, title, year, letterboxd_url):
+    def __init__(self, title, year, letterboxd_uri):
         self.title = title
         self.year = year
-        self.letterboxd_url = letterboxd_url
+        self.letterboxd_uri = letterboxd_uri
         self.tmdb_id = None
         self.directors = []
         self.directors_genders = []
@@ -46,7 +46,7 @@ class Movie():
 
     @property
     def is_directed_by_woman(self):
-        if len(self.directors_genders) > 1:
+        if len(self.directors_genders) < 1:
             return self.directors_genders[0] == 1
         else: 
             return any(gender == 1 for gender in self.directors_genders)

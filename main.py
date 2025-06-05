@@ -56,3 +56,17 @@ print(f"{unidentified_movies} films not identified.")
 print(f"Your watched movies by women are:")
 for element in watched_movies_by_women:
     print(f"{element.title} by {element.directors[0]["name"]}")
+
+# EXPORT RESULTS AS CSV
+
+with open("watchlist_by_women.csv", "w", newline="") as csvfile:
+    fieldnames = ["Name","Year","Letterboxd URI"]
+    
+    thewriter = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+    thewriter.writeheader()
+
+    for movie in watched_movies_by_women:
+        thewriter.writerow({"Name": movie.title, "Year": movie.year, "Letterboxd URI": movie.letterboxd_uri})
+
+print("Your data has been exported, you can now import it to Letterboxd.")
