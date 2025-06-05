@@ -46,7 +46,12 @@ class Movie():
 
     @property
     def is_directed_by_woman(self):
-        if len(self.directors_genders) < 1:
-            return self.directors_genders[0] == 1
-        else: 
-            return any(gender == 1 for gender in self.directors_genders)
+        self.fetch_tmdb_id()
+        if self.tmdb_id:
+            self.fetch_directors_genders()
+            if self.directors_genders:
+                if len(self.directors_genders) < 1:
+                    return self.directors_genders[0] == 1
+                else: 
+                    return any(gender == 1 for gender in self.directors_genders)
+        return False

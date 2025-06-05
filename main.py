@@ -29,20 +29,21 @@ with open("data/watched.csv", "r") as csv_file:
 # Iterates watched_movies, applies is_directed_by_woman() and appends to watched_movies_by_women if True.
 n_of_movies_total = len(watched_movies)
 watched_movies_by_women = []
-not_found_movies = 0
-unidentified_movies = 0
+not_found_movies = []
+unidentified_movies = []
 
 for element in watched_movies:
     movie = Movie(element[0], element[1], element[2])
     print(f"Analyzing {watched_movies.index(element) + 1} of {n_of_movies_total}: {movie.title}")
-    movie.fetch_tmdb_id()
-    if movie.tmdb_id:
-        movie.fetch_directors_genders()
-        if movie.directors_genders:
-            if movie.is_directed_by_woman:
-                watched_movies_by_women.append(movie)
-                print(f"{movie.title} is directed by women")
-
+    if movie.is_directed_by_woman:
+        watched_movies_by_women.append(movie)
+        print(f"{movie.title} is directed by women")
+    else:
+        if movie.tmdb_id == None:
+            not_found_movies.append(movie)
+        elif movie.directors_genders == []:
+            unidentified_movies.append(movie)
+            
     time.sleep(0.05)
 
 n_of_movies_by_women = len(watched_movies_by_women)
@@ -51,8 +52,12 @@ percentage_by_women = (n_of_movies_by_women *100) / n_of_movies_total
 
 # PRINT RESULTS
 print(f"You've watched {n_of_movies_by_women} movies directed by women out of {n_of_movies_total} movies in total. That is a {percentage_by_women:.2f}%.")
-print(f"{not_found_movies} films not found.")
-print(f"{unidentified_movies} films not identified.")
+print(f"{len(not_found_movies)} films not found. The movies we couldn't find were are:")
+for element in not_found_movies:
+    print(f"{element.title}.")
+print(f"The movies we couldn't identify are:")
+for element in unidentified_movies:
+    print(f"{element.title} by {element.directors[0]["name"]}")
 print(f"Your watched movies by women are:")
 for element in watched_movies_by_women:
     print(f"{element.title} by {element.directors[0]["name"]}")
