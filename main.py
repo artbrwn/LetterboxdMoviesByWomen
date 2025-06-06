@@ -1,6 +1,8 @@
 import csv
 from dotenv import load_dotenv
 import time
+from collections import defaultdict
+import matplotlib.pyplot as plt
 load_dotenv()
 from movie import Movie
 
@@ -96,11 +98,34 @@ def print_results(results):
         print(f"{element.title}.")
     print(f"The movies we couldn't identify are:")
     for element in unidentified:
-        print(f"{element.title} by {element.directors[0]["name"]}")
+        print(f"{element.title}")
     print(f"Your watched movies by women are:")
     for element in by_women:
-        print(f"{element.title} by {element.directors[0]["name"]}")
+        print(f"{element.title}")
 
+def movies_per_year(results):
+    """
+    Returns a dictionary with the years as keys and the number of movies per year as arguments.
+    """
+    movies_per_year_dict = defaultdict(int)
+    for result in results["by_women"]:
+        year = result.watch_date[:4]
+        movies_per_year_dict[year] += 1
+    return movies_per_year_dict
+
+def graph_evolution(movies_per_year_dict):
+    """
+    Uses matplot to create a graph of the evolution of the movies directed by woman watched per year.
+    """
+    years_sorted = sorted(movies_per_year_dict.keys())
+    movies_per_year = [movies_per_year_dict[year] for year in years_sorted]
+    plt.plot(years_sorted, movies_per_year) 
+    plt.title("Evolution of the movies directed by women watched per year")
+    plt.xlabel("Years")
+    plt.ylabel("Number of movies")
+    plt.savefig("evolution_graph.png")
+    plt.show()
+    
 
 def export_results(results):
     """
@@ -128,8 +153,10 @@ def export_results(results):
 def main():
     watched_movies = get_data()
     analysis_result = analyze_movies(watched_movies)
-    print_results(analysis_result)
     export_results(analysis_result)
+    movies_per_year_result = movies_per_year(analysis_result)
+    graph_evolution(movies_per_year_result)
+    print_results(analysis_result)
 
 
 if __name__ == "__main__":
