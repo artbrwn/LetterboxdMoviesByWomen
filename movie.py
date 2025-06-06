@@ -6,10 +6,11 @@ class Movie():
     TMDB_API_KEY = os.getenv("TMDB_API_KEY")
     TMDB_BASE_URL = "https://api.themoviedb.org/3"
 
-    def __init__(self, title, year, letterboxd_uri):
+    def __init__(self, title, year, letterboxd_uri, watch_date):
         self.title = title
         self.year = year
         self.letterboxd_uri = letterboxd_uri
+        self.watch_date = watch_date
         self.tmdb_id = None
         self.directors = []
         self.directors_genders = []

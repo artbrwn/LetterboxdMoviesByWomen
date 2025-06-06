@@ -26,7 +26,7 @@ def get_data():
         # Appends all the watched movies to a list watched_movies as a tuple name, release year
         watched_movies = []
         for line in csv_reader:
-            watched_movies.append((line[1], line[2], line[3]))
+            watched_movies.append((line[0], line[1], line[2], line[3]))
     return watched_movies
 
 def analyze_movies(watched_movies):
@@ -61,7 +61,7 @@ def analyze_movies(watched_movies):
     unidentified_movies = []
 
     for element in watched_movies:
-        movie = Movie(element[0], element[1], element[2])
+        movie = Movie(element[1], element[2], element[3], element[0])
         print(f"Analyzing {watched_movies.index(element) + 1} of {len(watched_movies)}: {movie.title}")
 
         if movie.is_directed_by_woman:
