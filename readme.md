@@ -76,3 +76,4 @@ This project is licensed under the MIT License.
 
 ## 🤝 Credits
 Letterboxd movies by women uses the TMDB API but is not endorsed or certified by TMDB.
+Inspired by the idea by [Holopollock](https://directed-by-women.vercel.app/)
